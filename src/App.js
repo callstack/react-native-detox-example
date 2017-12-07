@@ -6,18 +6,35 @@
 
 import React, { Component } from 'react';
 import {
-  StyleSheet,
+	StyleSheet,
+	TouchableOpacity,
   Text,
   View
 } from 'react-native';
 
 export default class App extends Component {
+	/**
+	 * We display this dummy alert to demonstrate
+	 * a different querying of an element with Detox.
+	 *
+	 * See `__e2e__/App.test.js` for details
+	 */
+	displayAlert() {
+		alert('Hey, I am an alert!');
+	}
+
   render() {
     return (
       <View style={styles.container}>
-        <Text testID="welcome" style={styles.welcome}>
+        <TouchableOpacity
+					testID="alertLink"
+					style={styles.welcome}
+					onPress={this.displayAlert}
+				>
+				<Text testID="welcome">
           Welcome to React Native!
-        </Text>
+				</Text>
+        </TouchableOpacity>
         <Text style={styles.instructions}>
           To get started, edit index.ios.js
         </Text>
