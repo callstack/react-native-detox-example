@@ -27,6 +27,9 @@ jobs:
     <<: *defaults
     macos:
       xcode: "9.0"
+    dependencies:
+      pre:
+        - xcrun instruments -w "iPhone 8 (11" || true
     steps:
       - checkout
       - restore_cache: *restore-cache
@@ -43,7 +46,8 @@ jobs:
       - restore_cache: *restore-cache
       - run: *install-node-dependencies
       - save_cache: *save-ios-cache
-      - run: npm run test:unit
+      - run: detox build -c ios.sim.release
+      - run: detox test -c ios.sim.release
 
 workflows:
   version: 2
