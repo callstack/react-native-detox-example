@@ -38,9 +38,9 @@ jobs:
         - xcrun instruments -w "iPhone 8 (11.1) [" || true
     steps:
       - checkout
-      - restore_cache: *restore-cache
+      # - restore_cache: *restore-cache
       - run: *install-node-dependencies
-      - save_cache: *save-node-cache
+      # - save_cache: *save-node-cache
       - run: detox build -c ios.sim.release
       - run: detox test -c ios.sim.release
 
