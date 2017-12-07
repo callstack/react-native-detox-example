@@ -1,21 +1,50 @@
-version: 2
+aliases:
+  - &restore-cache
+    keys:
+      - test-{{ .Branch }}-{{ checksum "package.json" }}
+      - test-{{ .Branch }}
+
+  - &save-cache
+    key: test-{{ .Branch }}-{{ checksum "package.json" }}
+    paths:
+      - ~/.cache/yarn
+      - ~/react-native-detox-example/node_modules
+
+  - &install-node-dependencies
+    |
+      yarn
+
+defaults: &defaults
+  working_directory: ~/react-native-detox-example
+
 jobs:
-  build:
+  test-ios:
+    <<: *defaults
     macos:
       xcode: "9.0"
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/circleci-2-demo
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - test-{{ .Branch }}-{{ checksum "package.json" }}
-            - test-{{ .Branch }}
-      - run: yarn
-      - save_cache:
-          key: test-{{ .Branch }}-{{ checksum "package.json" }}
-          paths:
-            - ~/.cache/yarn
-            - ~/circleci-2-demo/node_modules
-      - run: npm test
+      - restore_cache: *restore-cache
+      - run: *install-node-dependencies
+      - save_cache: *save-cache
+      - run: npm run test:ios:release
+
+  test-js:
+    <<: *defaults
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - restore_cache: *restore-cache
+      - run: *install-node-dependencies
+      - save_cache: *save-cache
+      - run: npm run test:unit
+
+workflows:
+  version: 2
+
+  build:
+    jobs:
+      - test-js
+      - test-ios
+
