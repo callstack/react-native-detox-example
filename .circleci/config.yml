@@ -4,11 +4,16 @@ aliases:
       - test-{{ .Branch }}-{{ checksum "package.json" }}
       - test-{{ .Branch }}
 
-  - &save-cache
+  - &save-node-cache
     key: test-{{ .Branch }}-{{ checksum "package.json" }}
     paths:
-      - ~/.cache/yarn
-      - ~/react-native-detox-example/node_modules
+      - node_modules
+
+  - &save-ios-cache
+    key: test-{{ .Branch }}-{{ checksum "package.json" }}
+    paths:
+      - node_modules
+      - ios/build
 
   - &install-node-dependencies
     |
@@ -26,7 +31,7 @@ jobs:
       - checkout
       - restore_cache: *restore-cache
       - run: *install-node-dependencies
-      - save_cache: *save-cache
+      - save_cache: *save-node-cache
       - run: npm run test:ios:release
 
   test-js:
@@ -37,7 +42,7 @@ jobs:
       - checkout
       - restore_cache: *restore-cache
       - run: *install-node-dependencies
-      - save_cache: *save-cache
+      - save_cache: *save-ios-cache
       - run: npm run test:unit
 
 workflows:
