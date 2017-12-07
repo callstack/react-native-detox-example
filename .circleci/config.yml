@@ -1,16 +1,16 @@
 aliases:
   - &restore-cache
     keys:
-      - test-{{ .Branch }}-{{ checksum "package.json" }}
-      - test-{{ .Branch }}
+      - v2-test-{{ .Branch }}-{{ checksum "package.json" }}
+      - v2-test-{{ .Branch }}
 
   - &save-node-cache
-    key: test-{{ .Branch }}-{{ checksum "package.json" }}
+    key: v2-test-{{ .Branch }}-{{ checksum "package.json" }}
     paths:
       - node_modules
 
   - &save-ios-cache
-    key: test-{{ .Branch }}-{{ checksum "package.json" }}
+    key: v2-test-{{ .Branch }}-{{ checksum "package.json" }}
     paths:
       - node_modules
       - ios/build
