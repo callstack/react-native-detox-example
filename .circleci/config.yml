@@ -29,13 +29,20 @@ jobs:
       xcode: "9.0"
     dependencies:
       pre:
-        - xcrun instruments -w "iPhone 8 (11" || true
+        # Install required `detox`
+        - brew update
+        - brew tap wix/brew
+        - brew install --HEAD applesimutils
+
+        # Pre-boot iOS simulator
+        - xcrun instruments -w "iPhone 8 (11.1) [" || true
     steps:
       - checkout
       - restore_cache: *restore-cache
       - run: *install-node-dependencies
       - save_cache: *save-node-cache
-      - run: npm run test:ios:release
+      - run: detox build -c ios.sim.release
+      - run: detox test -c ios.sim.release
 
   test-js:
     <<: *defaults
@@ -46,8 +53,7 @@ jobs:
       - restore_cache: *restore-cache
       - run: *install-node-dependencies
       - save_cache: *save-ios-cache
-      - run: detox build -c ios.sim.release
-      - run: detox test -c ios.sim.release
+      - run: npm test
 
 workflows:
   version: 2
